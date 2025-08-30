@@ -1,0 +1,66 @@
+{% extends 'core/base.html' %}
+{% block title %}Patient-Doctor Mappings{% endblock %}
+{% block content %}
+<h2>Patient-Doctor Mappings</h2>
+<!-- Display Form Errors -->
+{% if mapping_form.errors %}
+    <div class="alert alert-danger">
+        <ul>
+            {% for error in mapping_form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            {% for field in mapping_form %}
+                {% for error in field.errors %}
+                    <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+<!-- Add Mapping Modal Trigger -->
+<button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addMappingModal">Assign Doctor</button>
+<!-- Add Mapping Modal -->
+<div class="modal fade" id="addMappingModal" tabindex="-1" aria-labelledby="addMappingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addMappingModalLabel">Assign Doctor to Patient</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'mapping_list' %}">
+                    {% csrf_token %}
+                    {{ mapping_form.as_p }}
+                    <button type="submit" class="btn btn-primary">Assign Doctor</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Mapping List -->
+<h3>All Mappings</h3>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Patient</th>
+            <th>Doctor</th>
+            <th>Assigned At</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for mapping in mappings %}
+        <tr>
+            <td>{{ mapping.patient.name }}</td>
+            <td>{{ mapping.doctor.name }}</td>
+            <td>{{ mapping.assigned_at }}</td>
+            <td>
+                <a href="{% url 'mapping_delete' mapping.id %}" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" title="Remove mapping" onclick="return confirm('Are you sure you want to remove this mapping?')">Remove</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="text-center">No mappings found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

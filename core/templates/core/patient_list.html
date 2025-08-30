@@ -1,0 +1,52 @@
+{% extends 'core/base.html' %}
+{% block title %}Patients{% endblock %}
+{% block content %}
+<h2>Patients</h2>
+<!-- Add Patient Modal Trigger -->
+<button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addPatientModal">Add Patient</button>
+<!-- Add Patient Modal -->
+<div class="modal fade" id="addPatientModal" tabindex="-1" aria-labelledby="addPatientModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPatientModalLabel">Add New Patient</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'patient_list' %}">
+                    {% csrf_token %}
+                    {{ patient_form.as_p }}
+                    <button type="submit" class="btn btn-primary">Add Patient</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Patient List -->
+<h3>Your Patients</h3>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for patient in patients %}
+        <tr>
+            <td>{{ patient.name }}</td>
+            <td>{{ patient.age }}</td>
+            <td>{{ patient.gender }}</td>
+            <td>
+                <a href="{% url 'patient_update' patient.id %}" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" title="Edit patient details">Update</a>
+                <a href="{% url 'patient_delete' patient.id %}" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" title="Remove patient" onclick="return confirm('Are you sure you want to delete {{ patient.name }}?')">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="text-center">No patients found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

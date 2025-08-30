@@ -1,0 +1,20 @@
+{% extends "core/base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<div class="text-center">
+    <h1 class="display-4 fw-bold">Welcome to the Healthcare System</h1>
+    <p class="lead text-muted">Manage Patients, Doctors, and their Mappings with ease.</p>
+    {% if user.is_authenticated %}
+        <div class="mt-4">
+            <a href="{% url 'patient_list' %}" class="btn btn-primary mx-2" data-bs-toggle="tooltip" title="View and manage patients">Go to Patients</a>
+            <a href="{% url 'doctor_list' %}" class="btn btn-success mx-2" data-bs-toggle="tooltip" title="View and manage doctors">Go to Doctors</a>
+            <a href="{% url 'mapping_list' %}" class="btn btn-info mx-2" data-bs-toggle="tooltip" title="View and manage patient-doctor mappings">Go to Mappings</a>
+        </div>
+    {% else %}
+        <div class="mt-4">
+            <a href="{% url 'login' %}" class="btn btn-primary mx-2" data-bs-toggle="tooltip" title="Sign in to your account">Login</a>
+            <a href="{% url 'register' %}" class="btn btn-secondary mx-2" data-bs-toggle="tooltip" title="Create a new account">Register</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

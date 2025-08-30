@@ -1,0 +1,31 @@
+{% extends 'core/base.html' %}
+{% block title %}Update Doctor{% endblock %}
+{% block content %}
+<div class="card p-4 mx-auto" style="max-width: 600px;">
+    <h2 class="mb-4">Update Doctor: {{ doctor.name }}</h2>
+    <!-- Display Form Errors -->
+    {% if doctor_form.errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for error in doctor_form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                {% for field in doctor_form %}
+                    {% for error in field.errors %}
+                        <li>{{ field.label }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    <!-- Update Doctor Form -->
+    <form method="post" action="{% url 'doctor_update' doctor.id %}">
+        {% csrf_token %}
+        {{ doctor_form.as_p }}
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Update Doctor</button>
+            <a href="{% url 'doctor_list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
